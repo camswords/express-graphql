@@ -28,7 +28,7 @@ import type { Request, Response } from 'express';
  * Used to configure the graphQLHTTP middleware by providing a schema
  * and other configuration options.
  */
-export type Options = ((req: Request) => OptionsObj) | OptionsObj
+export type Options = ((req: Request, response: Response) => OptionsObj) | OptionsObj
 export type OptionsObj = {
   /**
    * A GraphQL schema from graphql-js.
@@ -87,7 +87,7 @@ export default function graphqlHTTP(options: Options): Middleware {
     new Promise((resolve, reject) => {
 
       // Get GraphQL options given this request.
-      const optionsObj = getOptions(options, request);
+      const optionsObj = getOptions(options, request, response);
       schema = optionsObj.schema;
       rootValue = optionsObj.rootValue;
       pretty = optionsObj.pretty;
@@ -208,8 +208,8 @@ export default function graphqlHTTP(options: Options): Middleware {
  * Get the options that the middleware was configured with, sanity
  * checking them.
  */
-function getOptions(options: Options, request: Request): OptionsObj {
-  var optionsData = typeof options === 'function' ? options(request) : options;
+function getOptions(options: Options, request: Request, response: Response): OptionsObj {
+  var optionsData = typeof options === 'function' ? options(request, response) : options;
 
   if (!optionsData || typeof optionsData !== 'object') {
     throw new Error(
