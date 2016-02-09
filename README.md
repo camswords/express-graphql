@@ -92,7 +92,7 @@ depending on the provided *Content-Type* header.
 In order to support advanced scenarios such as installing a GraphQL server on a
 dynamic endpoint or accessing the current authentication information,
 express-graphql allows options to be provided as a function of each
-express request.
+express request / response.
 
 This example uses [`express-session`][] to run GraphQL on a rootValue based on
 the currently logged-in session.
@@ -105,7 +105,7 @@ var app = express();
 
 app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
 
-app.use('/graphql', graphqlHTTP(request => ({
+app.use('/graphql', graphqlHTTP((request, response) => ({
   schema: MySessionAwareGraphQLSchema,
   rootValue: { session: request.session },
   graphiql: true

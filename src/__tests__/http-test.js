@@ -643,12 +643,12 @@ describe('test harness', () => {
         var storage = multer.memoryStorage();
         app.use(urlString(), multer({ storage }).single('file'));
 
-        // Providing the request as part of `rootValue` allows it to
+        // Providing the request / response as part of `rootValue` allows it to
         // be accessible from within Schema resolve functions.
-        app.use(urlString(), graphqlHTTP(req => {
+        app.use(urlString(), graphqlHTTP((req, res) => {
           return {
             schema: TestMutationSchema,
-            rootValue: { request: req }
+            rootValue: { request: req, response: res }
           };
         }));
 
